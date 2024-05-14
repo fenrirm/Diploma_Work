@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/test_scripts.js"></script>
+    <script src="/create_test.js"></script>
+    <script src="/course_scripts.js"></script>
+
+</head>
+
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <button id="coursesBtn">My courses</button>
+            <button id="testsBtn">My tests</button>
+            <button id="studentsBtn">My students</button>
+            <button id="settingsBtn">Settings</button>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <h2>Create Test</h2>
+        <form id="createTestForm" class="form-container" th:action="@{/saveTest}" method="post">
+
+            <div class="form-group">
+                <label for="testName" class="form-label">Test Name:</label>
+                <input type="text" id="testName" name="testName" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="totalPoints" class="form-label">Total Points:</label>
+                <input type="number" id="totalPoints" name="totalPoints" class="form-input" required>
+            </div>
+
+            <h3>Add Questions:</h3>
+
+            <div id="questionsContainer">
+                <!-- Questions will be dynamically added here -->
+            </div>
+
+            <div class="form-button-container">
+                <button type="button" id="addSingleChoiceQuestion" class="form-button">Add Single Choice Question</button>
+                <button type="button" id="addMultipleChoiceQuestion" class="form-button">Add Multiple Choice Question</button>
+                <button type="button" id="addWordQuestion" class="form-button">Add Word Question</button>
+            </div>
+
+            <div class="form-group">
+                <label for="courseId" class="form-label">Select Course:</label>
+                <select id="courseId" name="courseId" class="form-input" required>
+                    <option value="">Select Course</option>
+                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.title}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="form-button form-button-submit">Create Test</button>
+        </form>
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+        <div class="logout-message" style="display: none;">Logout successful!</div>
+    </div>
+</div>
+
+</body>
+</html>

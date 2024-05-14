@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/course_scripts.js"></script>
+    <script src="/test_scripts.js"></script>
+</head>
+<body>
+
+
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <button id="coursesBtn">My courses</button>
+            <button id="testsBtn">My tests</button>
+            <button id="studentsBtn">My students</button>
+            <button id="settingsBtn">Settings</button>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <h2>My tests</h2>
+        <div id="teacherTests" class="course-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="search-container">
+                            <label for="searchInput">Search by Title:</label>
+                            <input type="text" id="searchInput" name="searchInput">
+                        </div>
+                    </th>
+                    <th scope="col">Points</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="test : ${teacherTests}" th:id="'test_' + ${test.id}">
+                    <td th:text="${test.title}"></td>
+                    <td th:text="${test.points}"></td>
+                    <td class="button-container">
+                        <button class="view-button" id="viewTestBtn">View</button>
+                        <button class="edit-button" id="editTestBtn">Edit</button>
+                        <button class="delete-button" th:onclick="'deleteTest(\'' + ${test.id} + '\')'" id="deleteTestBtn">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="content-buttons">
+            <button id="createTestBtn" class="create-course-btn">Create test</button>
+        </div>
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+        <div class="logout-message" style="display: none;">Logout successful!</div>
+    </div>
+</div>
+</body>
+</html>
