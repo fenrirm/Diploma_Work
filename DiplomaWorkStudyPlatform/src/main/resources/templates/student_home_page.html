@@ -54,12 +54,7 @@
     <div class="user-name">
         <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
     </div>
-    <form th:action="@{/logout}" method="post">
-        <button type="submit" class="logout-btn">Logout</button>
-    </form>
-    <div class="logout-message" th:if="${param.logout}">
-        Logout successful!
-    </div>
+    <a th:href="@{/login}" class="logout-btn">Logout</a>
 </div>
 </body>
 </html>

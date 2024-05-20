@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/search_sort.js"></script>
+    <script src="/test_delete.js"></script>
+    <script src="/course_edit.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <a th:href="@{/teacher_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/teacher_tests}" class="btn btn-primary">My tests</a>
+            <a th:href="@{/teacher_students}" class="btn btn-primary">My students</a>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">Settings</a>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <div class="content-block">
+            <h2>Course details</h2>
+            <form th:action="@{/teacher_update_course}" th:object="${course}" method="post" class="edit-course-form">
+                <input type="hidden" th:field="*{id}" />
+                <div>
+                    <label for="courseTitle">Course Title:</label>
+                    <input type="text" id="courseTitle" th:field="*{title}" class="form-input"/>
+                    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red" class="error-message"></div>
+                </div>
+                <div>
+                    <label for="coursePoints">Course Points:</label>
+                    <input type="number" id="coursePoints" th:field="*{points}" class="form-input"/>
+                    <div th:if="${#fields.hasErrors('points')}" th:errors="*{points}" style="color: red" class="error-message"></div>
+                </div>
+                <button type="submit" class="add-btn">Save Changes</button>
+            </form>
+        </div>
+        <div class="content-block">
+            <h2>Study materials</h2>
+            <div class="tasks-table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Study material</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="studyMaterial : ${studyMaterials}">
+                        <td>
+                            <span th:if="${#strings.contains(studyMaterial, 'https://') || #strings.contains(studyMaterial, 'http://')}">
+                                <a th:href="${studyMaterial}" th:text="${studyMaterial}" target="_blank"></a>
+                            </span>
+                            <span th:unless="${#strings.contains(studyMaterial, 'https://') || #strings.contains(studyMaterial, 'http://')}"
+                                  th:text="${studyMaterial}"></span>
+                        </td>
+                        <td class="button-container">
+                            <button class="delete-button" data-material-id="${studyMaterial.id}" data-course-id="${course.id}">Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="add-btn" onclick="addMaterialField()">Add some material</button>
+            <div id="materialsContainer" >
+                <!-- Нові поля для матеріалів будуть додаватися сюди -->
+            </div>
+            <button type="button" id="saveMaterialsBtn" class="add-btn" th:attr="data-save-url=@{/material/save(courseId=${course.id})}">Save Materials</button>
+        </div>
+        <div class="content-block">
+            <h2>Tasks</h2>
+            <div class="tasks-table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="search-container">
+                                <label for="searchInput">Search by Title:</label>
+                                <input type="text" id="searchInput" name="searchInput">
+                            </div>
+                        </th>
+                        <th scope="col">Points</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="test : ${courseTests}" th:id="'test_' + ${test.id}">
+                        <td th:text="${test.title}"></td>
+                        <td th:text="${test.points}"></td>
+                        <td class="button-container">
+                            <button class="delete-button" th:onclick="'deleteTest(\'' + ${test.id} + '\', \'' + ${courseId} + '\')'">Delete</button>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a th:href="@{/teacher_create_test/{courseId}(courseId=${course.id})}" class="add-btn">Add new test</a>
+        </div>
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
+    </div>
+</div>
+</body>
+</html>

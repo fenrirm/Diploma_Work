@@ -11,4 +11,8 @@ import java.util.List;
 public interface TestRepository extends JpaRepository<Test, Integer> {
     List<Test> findTestsByCourseIdOrderByIdDesc(int courseId);
 
+    Test findTestsById(int testId);
+
+
+
 }

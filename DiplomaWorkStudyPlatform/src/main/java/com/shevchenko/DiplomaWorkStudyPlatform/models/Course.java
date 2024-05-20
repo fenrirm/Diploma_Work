@@ -2,6 +2,7 @@ package com.shevchenko.DiplomaWorkStudyPlatform.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,10 +20,17 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
+    @NotEmpty(message = "Title cannot be empty")
+    @Pattern(regexp="^[A-Za-z\\s]{1,50}$", message="Course title must contain only letters and spaces, and be up to 50 characters long")
     @Column(name = "title")
     private String title;
+
+    @Min(value = 1, message = "Points must be greater than 0")
+    @Max(value = 999, message = "Points must be less than 1000")
     @Column(name = "points")
     private int points;
+
     @Column(name = "course_key")
     private String courseKey;
 
@@ -31,8 +39,12 @@ public class Course {
     @JsonIgnore
     private User user;
 
+    @Size(max = 10000, message = "Study materials must be up to 10000 characters long")
     @Column(name = "study_materials")
     private String studyMaterials;
+
+
+
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Test> tests;

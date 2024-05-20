@@ -21,11 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "login";
     }
 
-    function redirectToViewCourse() {
-        window.location.href = "teacher_view_course";
-    }
-
-
 
     // Get the courses button
     const coursesBtn = document.getElementById('coursesBtn');
@@ -43,16 +38,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const logoutBtn = document.getElementById('logoutBtn');
     logoutBtn.addEventListener('click', redirectToLogin);
 
-    const viewCourseBtn = document.getElementById("viewCourseBtn")
-    viewCourseBtn.addEventListener('click', redirectToViewCourse);
-    //
-    // const editCourseBtn = document.getElementById("editCourseBtn")
-    // editCourseBtn.addEventListener('click', redirectToLogin);
-    //
-    const deleteCourseBtn = document.getElementById("deleteCourseBtn")
-    deleteCourseBtn.addEventListener('click', deleteCourse);
-
-
     const createTestBtn = document.getElementById('createTestBtn');
     createTestBtn.addEventListener('click', redirectToCreateTest);
 });
+
+function redirectToViewCourse(courseId) {
+    window.location.href = '/teacher_view_course/' + courseId;
+}
+function redirectToEditCourse(courseId) {
+    window.location.href = '/teacher_edit_course/' + courseId;
+}

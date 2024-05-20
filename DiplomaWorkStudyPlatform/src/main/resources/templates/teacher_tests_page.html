@@ -6,8 +6,8 @@
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/styles.css">
-    <script src="/course_scripts.js"></script>
     <script src="/test_scripts.js"></script>
+    <script src="/search_sort.js"></script>
 </head>
 <body>
 
@@ -15,10 +15,10 @@
 <div class="dashboard">
     <div class="sidebar">
         <div class="sidebar-buttons">
-            <button id="coursesBtn">My courses</button>
-            <button id="testsBtn">My tests</button>
-            <button id="studentsBtn">My students</button>
-            <button id="settingsBtn">Settings</button>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/teacher_tests}" class="btn btn-primary">My tests</a>
+            <a th:href="@{/teacher_students}" class="btn btn-primary">My students</a>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">Settings</a>
         </div>
     </div>
     <div class="content" id="content">
@@ -51,15 +51,14 @@
             </table>
         </div>
         <div class="content-buttons">
-            <button id="createTestBtn" class="create-course-btn">Create test</button>
+            <a th:href="@{/teacher_create_test}" class="create-course-btn">Create test</a>
         </div>
     </div>
     <div class="user-info">
         <div class="user-name">
             <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
         </div>
-        <button class="logout-btn" id="logoutBtn">Logout</button>
-        <div class="logout-message" style="display: none;">Logout successful!</div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
     </div>
 </div>
 </body>

@@ -6,34 +6,48 @@
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/styles.css">
-    <script src="/course_scripts.js"></script>
-    <script src="/course_sort.js"></script>
+    <script src="/search_sort.js"></script>
 </head>
 <body>
 
 <div class="dashboard">
     <div class="sidebar">
         <div class="sidebar-buttons">
-            <button id="coursesBtn">My courses</button>
-            <button id="testsBtn">My tests</button>
-            <button id="studentsBtn">My students</button>
-            <button id="settingsBtn">Settings</button>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/teacher_tests}" class="btn btn-primary">My tests</a>
+            <a th:href="@{/teacher_students}" class="btn btn-primary">My students</a>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">Settings</a>
         </div>
     </div>
     <div class="content" id="content">
         <div class="content-block">
             <h2>Study materials</h2>
+            <ul>
+                <li th:each="studyMaterial : ${studyMaterials}">
+            <span th:if="${#strings.contains(studyMaterial, 'https://') || #strings.contains(studyMaterial, 'https://')}">
+                <a th:href="${studyMaterial}" th:text="${studyMaterial}" target="_blank"></a>
+            </span>
+                    <span th:unless="${#strings.contains(studyMaterial, 'https://') || #strings.contains(studyMaterial, 'https://')}"
+                          th:text="${studyMaterial}"></span>
+                </li>
+            </ul>
         </div>
+
         <div class="content-block">
             <h2>Tasks</h2>
+            <ul>
+                <li th:each="test : ${courseTests}">
+                    <span th:text="${test.title}"></span> - <span th:text="${test.points}"></span> points
+                    <!--<a th:href="@{'/view_test?id=' + ${test.id}}">View</a>-->
+                </li>
+            </ul>
         </div>
     </div>
     <div class="user-info">
         <div class="user-name">
             <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
         </div>
-        <button class="logout-btn" id="logoutBtn">Logout</button>
-        <div class="logout-message" style="display: none;">Logout successful!</div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
     </div>
 </div>
 

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TestService {
     private final TestRepository testRepository;
 
@@ -19,11 +19,24 @@ public class TestService {
         this.testRepository = testRepository;
     }
 
+    @Transactional
     public void save(Test test){
         testRepository.save(test);
     }
 
     public List<Test> findTestsByCourseId(int courseId){
         return testRepository.findTestsByCourseIdOrderByIdDesc(courseId);
+    }
+
+    public int findCourseIdByTestId(int testId){
+        Test test = testRepository.findTestsById(testId);
+        return test.getCourse().getId();
+    }
+
+    @Transactional
+    public void deleteTestById(int testId){
+        Test test = testRepository.findTestsById(testId);
+        test.setCourse(null);
+        testRepository.save(test);
     }
 }

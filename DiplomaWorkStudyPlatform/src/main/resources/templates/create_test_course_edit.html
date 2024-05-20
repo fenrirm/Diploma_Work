@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="/styles.css">
     <script src="/test_scripts.js"></script>
-    <script src="/create_test.js"></script>
+    <script src="/create_test_course_edit.js"></script>
 
 </head>
 
@@ -49,11 +49,9 @@
             </div>
 
             <div class="form-group">
-                <label for="courseId" class="form-label">Select Course:</label>
-                <select id="courseId" name="courseId" class="form-input" required>
-                    <option value="">Select Course</option>
-                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.title}"></option>
-                </select>
+                <label for="courseName" class="form-label">Course:</label>
+                <input type="text" id="courseName" name="courseName" class="form-input" th:value="${course.title}" readonly>
+                <input type="hidden" id="courseId" name="courseId" th:value="${course.id}">
             </div>
 
             <button type="submit" class="form-button form-button-submit">Create Test</button>
