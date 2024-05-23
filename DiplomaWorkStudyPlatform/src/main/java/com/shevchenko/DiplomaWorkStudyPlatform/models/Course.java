@@ -26,11 +26,6 @@ public class Course {
     @Column(name = "title")
     private String title;
 
-    @Min(value = 1, message = "Points must be greater than 0")
-    @Max(value = 999, message = "Points must be less than 1000")
-    @Column(name = "points")
-    private int points;
-
     @Column(name = "course_key")
     private String courseKey;
 

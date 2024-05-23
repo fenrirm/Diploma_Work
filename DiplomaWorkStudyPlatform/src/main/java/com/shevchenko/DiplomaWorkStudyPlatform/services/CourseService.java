@@ -43,7 +43,6 @@ public class CourseService {
         Course existingCourse = courseRepository.findById(course.getId()).orElse(null);
         if (existingCourse != null) {
             existingCourse.setTitle(course.getTitle());
-            existingCourse.setPoints(course.getPoints());
             courseRepository.save(existingCourse);
         } else {
             throw new NullPointerException();
@@ -89,5 +88,7 @@ public class CourseService {
         return courseRepository.findAllById(courseIds);
     }
 
-
+    public List<Course> findCoursesByIdsAndTeacherId(List<Integer> courseIds, int teacherId) {
+        return courseRepository.findByIdInAndUserId(courseIds, teacherId);
+    }
 }

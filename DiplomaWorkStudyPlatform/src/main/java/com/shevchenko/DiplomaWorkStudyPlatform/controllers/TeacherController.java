@@ -1,12 +1,8 @@
 package com.shevchenko.DiplomaWorkStudyPlatform.controllers;
 
-import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
-import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
-import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.CourseService;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.EnrollmentService;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.TestService;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.UserService;
+import com.shevchenko.DiplomaWorkStudyPlatform.models.*;
+import com.shevchenko.DiplomaWorkStudyPlatform.services.*;
+import jakarta.persistence.Tuple;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,16 +22,17 @@ public class TeacherController {
     private final UserDetailsService userDetailsService;
     private final CourseService courseService;
     private final TestService testService;
-
     private final EnrollmentService enrollmentService;
+    private final StudentResultService studentResultService;
 
     @Autowired
-    public TeacherController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, TestService testService, EnrollmentService enrollmentService) {
+    public TeacherController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, TestService testService, EnrollmentService enrollmentService, StudentResultService studentResultService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
         this.courseService = courseService;
         this.testService = testService;
         this.enrollmentService = enrollmentService;
+        this.studentResultService = studentResultService;
     }
 
 
@@ -72,6 +69,30 @@ public class TeacherController {
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         return "teacher_students_page";
+    }
+
+    @GetMapping("/teacher_view_student/{studentId}")
+    public String teacherViewStudentPage(@PathVariable int studentId, Model model, Principal principal){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
+        User user = userService.findUserByUsername(principal.getName());
+
+        List<Integer> studentCourseIds = enrollmentService.getCourseIdsByUserId(studentId);
+        List<Course> studentCourses = courseService.findCoursesByIdsAndTeacherId(studentCourseIds, user.getId());
+
+        List<StudentResultView> courseResults = new ArrayList<>();
+        for (Course course : studentCourses) {
+            List<StudentResult> results = studentResultService.getStudentResultByCourseIdAndUserId(course.getId(), studentId);
+            for (StudentResult result : results) {
+                courseResults.add(new StudentResultView(course.getTitle(), result.getTest().getTitle(), result.getMark(), result.getTest().getPoints()));
+            }
+        }
+        User student = userService.findUserById(studentId);
+
+        model.addAttribute("user", userDetails);
+        model.addAttribute("fullName", user.getFullName());
+        model.addAttribute("courseResults", courseResults);
+        model.addAttribute("student", student);
+        return "view_student_page";
     }
 
     @GetMapping("/teacher_create_course")
@@ -160,7 +181,6 @@ public class TeacherController {
             model.addAttribute("course", course);
             return "edit_course_page";
         }
-        System.out.println("in after if controller");
         courseService.updateCourse(course);
         return "redirect:/teacher_edit_course/" + course.getId();
     }

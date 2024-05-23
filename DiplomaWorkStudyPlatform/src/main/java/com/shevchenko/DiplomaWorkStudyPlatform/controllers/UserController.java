@@ -1,10 +1,10 @@
 package com.shevchenko.DiplomaWorkStudyPlatform.controllers;
 import com.shevchenko.DiplomaWorkStudyPlatform.enums.Role;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
+import com.shevchenko.DiplomaWorkStudyPlatform.models.StudentResult;
+import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.CourseService;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.EnrollmentService;
-import com.shevchenko.DiplomaWorkStudyPlatform.services.UserService;
+import com.shevchenko.DiplomaWorkStudyPlatform.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -23,13 +25,17 @@ public class UserController {
     private final UserDetailsService userDetailsService;
     private final CourseService courseService;
     private final EnrollmentService enrollmentService;
+    private final TestService testService;
 
+    private final StudentResultService studentResultService;
     @Autowired
-    public UserController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, EnrollmentService enrollmentService) {
+    public UserController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, EnrollmentService enrollmentService, TestService testService, StudentResultService studentResultService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
         this.courseService = courseService;
         this.enrollmentService = enrollmentService;
+        this.testService = testService;
+        this.studentResultService = studentResultService;
     }
 
 
@@ -78,7 +84,25 @@ public class UserController {
         List<Integer> courseIds = enrollmentService.getCourseIdsByUserId(user.getId());
         List<Course> studentCourses = courseService.findCoursesByIds(courseIds);
 
+        Map<Integer, Integer> coursePoints = new HashMap<>();
+
+        for (Course course : studentCourses) {
+            List<Test> tests = testService.getTestsByCourseId(course.getId());
+            int totalPoints = tests.stream().mapToInt(Test::getPoints).sum();
+            coursePoints.put(course.getId(), totalPoints);
+        }
+
+        Map<Integer, Integer> studentCoursePoints = new HashMap<>();
+
+        for (Course course : studentCourses) {
+            List<StudentResult> results = studentResultService.getStudentResultByCourseIdAndUserId(course.getId(), user.getId());
+            int totalPoints = results.stream().mapToInt(StudentResult::getMark).sum();
+            studentCoursePoints.put(course.getId(), totalPoints);
+        }
+
         model.addAttribute("studentCourses", studentCourses);
+        model.addAttribute("coursePoints", coursePoints);
+        model.addAttribute("studentCoursePoints", studentCoursePoints);
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         return "student_home_page";

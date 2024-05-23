@@ -14,4 +14,8 @@ public interface StudentResultRepository extends JpaRepository<StudentResult, In
 
     @Query("SELECT sr FROM StudentResult sr WHERE sr.user.id = :userId ORDER BY sr.completionTime DESC")
     List<StudentResult> findStudentResultsByUserIdOrderByCompletionTimeDesc(int userId);
+
+    List<StudentResult> findByCourseIdAndUserId(int courseId, int userId);
+
+
 }

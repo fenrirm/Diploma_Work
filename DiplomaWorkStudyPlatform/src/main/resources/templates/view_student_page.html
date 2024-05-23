@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/styles.css">
+    <script src="/search_sort.js"></script>
 </head>
 <body>
+
 <div class="dashboard">
     <div class="sidebar">
         <div class="sidebar-buttons">
@@ -18,17 +20,24 @@
         </div>
     </div>
     <div class="content" id="content">
-        <h2>Create Course</h2>
-        <form id="createCourseForm" th:action="@{/courses/create}" method="post" th:object="${course}">
-            <label for="title">Course Name:</label><br>
-            <input type="text" id="title" name="title" th:value="${param.title}" required><br>
-            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red" class="error-message"></div>
-
-            <button type="submit">Create Course</button>
-        </form>
-        <div class="success-message" th:if="${param.success}">
-            Course added!
-        </div>
+        <h3>Viewing Results for Student: <span th:text="${student.fullName}">Student's name</span></h3>
+        <h3>Student's Courses:</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Назва курсу</th>
+                <th>Назва тесту</th>
+                <th>Результат</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${courseResults}">
+                <td th:text="${course.getCourseTitle()}">Course Title</td>
+                <td th:text="${course.getTestTitle()}">Test Title</td>
+                <td th:text="${course.getMark()}+ '/' +${course.getMaxMark()}">Mark</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="user-info">
         <div class="user-name">
@@ -37,5 +46,6 @@
         <a th:href="@{/login}" class="logout-btn">Logout</a>
     </div>
 </div>
+
 </body>
 </html>

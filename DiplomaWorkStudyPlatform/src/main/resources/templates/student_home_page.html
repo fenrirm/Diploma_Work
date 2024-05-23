@@ -36,16 +36,16 @@
                             <input type="text" id="searchInput" name="searchInput">
                         </div>
                     </th>
-                    <th scope="col">Points</th>
-                    <th scope="col">Course Key</th>
+                    <th scope="col">Your Course Points</th>
+                    <th scope="col">Max Course Points</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="course : ${studentCourses}" th:id="'course_' + ${course.id}">
                     <td th:text="${course.title}"></td>
-                    <td th:text="${course.points}"></td>
-                    <td th:text="${course.courseKey}"></td>
+                    <td th:text="${studentCoursePoints[course.id]}"></td>
+                    <td th:text="${coursePoints[course.id]}"></td>
                     <td class="button-container">
                         <a th:href="@{'/student_view_course/' + ${course.id}}">
                             <button class="view-button">View</button>

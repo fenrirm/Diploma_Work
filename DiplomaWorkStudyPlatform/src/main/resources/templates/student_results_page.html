@@ -32,7 +32,8 @@
                 <tr>
                     <th>Course Name</th>
                     <th>Test Name</th>
-                    <th>Mark</th>
+                    <th>Your score</th>
+                    <th>Max Test Score</th>
                     <th>Completion Time</th>
                 </tr>
                 </thead>
@@ -41,6 +42,7 @@
                     <td th:text="${testInfo.courseName}"></td>
                     <td th:text="${testInfo.testName}"></td>
                     <td th:text="${testInfo.mark}"></td>
+                    <td th:text="${testInfo.test_points}"></td>
                     <td th:text="${testInfo.completionTime}"></td>
                 </tr>
                 </tbody>

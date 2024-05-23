@@ -30,5 +30,9 @@ public class StudentResultService {
         return studentResultRepository.findStudentResultsByUserIdOrderByCompletionTimeDesc(userId);
     }
 
+    public List<StudentResult> getStudentResultByCourseIdAndUserId(int courseId, int userId){
+        return studentResultRepository.findByCourseIdAndUserId(courseId, userId);
+    }
+
 
 }

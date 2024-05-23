@@ -85,6 +85,7 @@ public class StudentController {
             testInfo.put("testName", result.getTest().getTitle());
             testInfo.put("courseName", result.getTest().getCourse().getTitle());
             testInfo.put("mark", result.getMark());
+            testInfo.put("test_points", result.getTest().getPoints());
             testInfo.put("completionTime", result.getCompletionTime());
             studentTestInfos.add(testInfo);
         }

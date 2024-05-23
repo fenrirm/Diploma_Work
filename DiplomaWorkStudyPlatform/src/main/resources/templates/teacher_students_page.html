@@ -41,6 +41,9 @@
                 <tr th:each="student : ${teacherStudent}" th:id="'course_' + ${student.id}">
                     <td th:text="${student.fullName}"></td>
                     <td class="button-container">
+                        <a th:href="@{'/teacher_view_student/' + ${student.id}}">
+                            <button class="view-button">View</button>
+                        </a>
                         <button class="delete-button" th:onclick="'deleteStudent(\'' + ${student.id} + '\')'" >Delete from all courses</button>
                     </td>
                 </tr>
