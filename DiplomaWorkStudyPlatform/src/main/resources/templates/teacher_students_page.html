@@ -21,8 +21,31 @@
     </div>
     <div class="content" id="content">
         <h2>My students</h2>
-        <div class="content-buttons">
-            <button class="create-course-btn">knopka students</button>
+        <div th:if="${teacherStudent.isEmpty()}">
+            <p>You don't have any students.</p>
+        </div>
+        <div th:if="${!teacherStudent.isEmpty()}" id="teacherCourses" class="course-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="search-container">
+                            <label for="searchInput">Search by Title:</label>
+                            <input type="text" id="searchInput" name="searchInput">
+                        </div>
+                    </th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="student : ${teacherStudent}" th:id="'course_' + ${student.id}">
+                    <td th:text="${student.fullName}"></td>
+                    <td class="button-container">
+                        <button class="delete-button" th:onclick="'deleteStudent(\'' + ${student.id} + '\')'" >Delete from all courses</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="user-info">

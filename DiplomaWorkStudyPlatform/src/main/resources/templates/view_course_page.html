@@ -37,11 +37,12 @@
             <h2>Tasks</h2>
             <ul>
                 <li th:each="test : ${courseTests}">
-                    <span th:text="${test.title}"></span> - <span th:text="${test.points}"></span> points
-                    <!--<a th:href="@{'/view_test?id=' + ${test.id}}">View</a>-->
+                   <!-- <span th:text="${test.title}"></span> - <span th:text="${test.points}"></span> points-->
+                    <a th:href="@{'/teacher_view_test/' + ${test.id}}"><span th:text="${test.title}"></span> - <span th:text="${test.points}"></span> points</a>
                 </li>
             </ul>
         </div>
+
     </div>
     <div class="user-info">
         <div class="user-name">

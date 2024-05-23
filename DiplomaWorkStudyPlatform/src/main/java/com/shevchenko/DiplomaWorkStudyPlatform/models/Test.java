@@ -20,10 +20,10 @@ public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @NotEmpty(message = "Title cannot be empty")
-    @Pattern(regexp = "^[A-Za-z\\s]{1,20}$", message = "Title must contain only letters and spaces and be up to 20 characters long")
+    @Pattern(regexp = "^[A-Za-z0-9_\\s\\-]{1,20}$", message = "Title must contain only letters and spaces and be up to 20 characters long")
     @Column(name = "title")
     private String title;
 
@@ -41,5 +41,8 @@ public class Test {
     @JsonIgnore
     private Course course;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @JsonIgnore
+    private User user;
 }

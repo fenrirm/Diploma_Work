@@ -19,7 +19,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @NotEmpty(message = "Title cannot be empty")
     @Pattern(regexp="^[A-Za-z\\s]{1,50}$", message="Course title must contain only letters and spaces, and be up to 50 characters long")
@@ -44,10 +44,11 @@ public class Course {
     private String studyMaterials;
 
 
-
-
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Test> tests;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Enrollment> enrollments;
 
 
 }

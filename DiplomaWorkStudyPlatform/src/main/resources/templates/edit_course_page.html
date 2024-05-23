@@ -6,7 +6,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/search_sort.js"></script>
-    <script src="/test_delete.js"></script>
+    <script src="/test_course_delete.js"></script>
     <script src="/course_edit.js"></script>
 </head>
 <body>
@@ -97,7 +97,25 @@
                     </tbody>
                 </table>
             </div>
-            <a th:href="@{/teacher_create_test/{courseId}(courseId=${course.id})}" class="add-btn">Add new test</a>
+            <div class="add-test-section">
+                <div class="add-test-container">
+                    <form th:action="@{/teacher_add_test_to_course}" method="post">
+                        <input type="hidden" name="courseId" th:value="${course.id}">
+                        <label for="freeTestsDropdown">Add a free test to the course:</label>
+                        <select name="testId" id="freeTestsDropdown" class="form-select">
+                            <option value="">Select a free test</option>
+                            <option th:each="test : ${freeTests}" th:value="${test.id}" th:text="${test.title}"></option>
+                        </select>
+                        <button type="submit" class="add-btn">Add selected test</button>
+                    </form>
+                </div>
+                <div class="add-new-test-container">
+                    <form>
+                        <label>Add a new test to the course:</label>
+                        <a th:href="@{/teacher_create_test/{courseId}(courseId=${course.id})}" class="add-btn">Add new test</a>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <div class="user-info">

@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const questionsContainer = document.getElementById('questionsContainer');
         const questionDiv = document.createElement('div');
         questionDiv.className = 'question';
+        questionDiv.setAttribute('data-question-type', questionType);
 
         let questionTypeLabel;
         switch (questionType) {
@@ -110,7 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
         answersContainer.appendChild(answerDiv);
     }
 
-
     function reindexQuestions() {
         const questions = document.querySelectorAll('.question');
         questionIndex = 0;
@@ -143,7 +143,6 @@ document.addEventListener("DOMContentLoaded", function () {
         addQuestion('word');
     });
 
-
     document.getElementById('createTestForm').addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -151,11 +150,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const totalPoints = document.getElementById('totalPoints').value;
         const courseId = document.getElementById('courseId').value;
 
-
+        let questionIndex = 0;
         const questions = [];
         const questionElements = document.querySelectorAll('.question');
         questionElements.forEach((questionElement) => {
             const questionText = questionElement.querySelector('.question-text').value;
+            const questionType = questionElement.getAttribute('data-question-type'); // Отримуємо тип питання
+
             const answers = [];
             const answerElements = questionElement.querySelectorAll('input[name^="answer_"]');
             answerElements.forEach((answerElement) => {
@@ -171,12 +172,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const difficultyLevelSelect = questionElement.querySelector('select');
             const difficultyLevel = difficultyLevelSelect.value;
             const questionData = {
+                questionID:  questionIndex,
                 questionText: questionText,
+                questionType: questionType, // Додаємо тип питання
                 answers: answers,
                 correctAnswers: correctAnswers,
                 difficultyLevel: difficultyLevel
             };
             questions.push(questionData);
+            ++questionIndex;
         });
 
         const testData = {

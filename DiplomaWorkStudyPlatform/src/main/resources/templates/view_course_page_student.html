@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/search_sort.js"></script>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <a th:href="@{/student_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/student_tests}" class="btn btn-primary">My results</a>
+            <a th:href="@{/student_teachers}" class="btn btn-primary">My teachers</a>
+            <a th:href="@{/student_home}" class="btn btn-primary">Settings</a>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <div class="content-block">
+            <h2>Study materials</h2>
+            <ul>
+                <li th:each="studyMaterial : ${studyMaterials}">
+            <span th:if="${#strings.contains(studyMaterial, 'https://') || #strings.contains(studyMaterial, 'https://')}">
+                <a th:href="${studyMaterial}" th:text="${studyMaterial}" target="_blank"></a>
+            </span>
+                    <span th:unless="${#strings.contains(studyMaterial, 'https://') || #strings.contains(studyMaterial, 'https://')}"
+                          th:text="${studyMaterial}"></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content-block">
+            <h2>Tasks</h2>
+            <div th:if="${courseTests.isEmpty()}">
+                <p>You do not have any tests</p>
+            </div>
+            <div th:if="${!courseTests.isEmpty()}" id="studentTests" class="course-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="search-container">
+                                <label for="searchInput">Search by Title:</label>
+                                <input type="text" id="searchInput" name="searchInput">
+                            </div>
+                        </th>
+                        <th scope="col">Points</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="test : ${courseTests}" th:id="'test_' + ${test.id}">
+                        <td th:text="${test.title}"></td>
+                        <td th:text="${test.points}"></td>
+                        <td class="button-container">
+                            <a th:href="@{'/student_start_test/' + ${test.id}}">
+                                <button class="view-button">Pass</button>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+</body>
+</html>

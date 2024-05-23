@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/test_edit.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <a th:href="@{/teacher_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/teacher_tests}" class="btn btn-primary">My tests</a>
+            <a th:href="@{/teacher_students}" class="btn btn-primary">My students</a>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">Settings</a>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <div class="test-details">
+            <h2 th:text="'Test: ' + ${test.title}">Test Title</h2>
+            <form id="editTestForm">
+                <input type="hidden" id="testId" th:value="${test.id}">
+                <div id="test-content" th:data-content="${test.content}"></div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
+    </div>
+</div>
+</body>
+</html>

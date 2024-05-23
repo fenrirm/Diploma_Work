@@ -1,13 +1,13 @@
-function deleteTest(testId) {
+function deleteTest(testId, courseId) {
     if (confirm("Are you sure you want to delete this test?")) {
-        fetch('/teacher_delete_test/' + testId, {
+        fetch('/teacher_delete_course_test/' + testId, {
             method: 'DELETE'
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                window.location.href = '/teacher_tests';
+                window.location.href = '/teacher_edit_course/'+courseId;
 
                 return response.json();
             })

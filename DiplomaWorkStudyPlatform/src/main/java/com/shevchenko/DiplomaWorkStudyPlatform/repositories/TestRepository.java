@@ -1,7 +1,6 @@
 package com.shevchenko.DiplomaWorkStudyPlatform.repositories;
 
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +12,11 @@ public interface TestRepository extends JpaRepository<Test, Integer> {
 
     Test findTestsById(int testId);
 
+    List<Test> findTestsByUserIdOrderByIdDesc(int teacherId);
+
+    List<Test> findByUserIdAndCourseIsNullOrderByIdDesc(int teacherId);
+
+    List<Test> findTestsByCourseId(int courseId);
 
 
 }

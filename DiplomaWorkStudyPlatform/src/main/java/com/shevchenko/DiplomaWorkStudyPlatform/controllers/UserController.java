@@ -3,6 +3,7 @@ import com.shevchenko.DiplomaWorkStudyPlatform.enums.Role;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.CourseService;
+import com.shevchenko.DiplomaWorkStudyPlatform.services.EnrollmentService;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,14 @@ public class UserController {
     private final UserService userService;
     private final UserDetailsService userDetailsService;
     private final CourseService courseService;
+    private final EnrollmentService enrollmentService;
 
     @Autowired
-    public UserController(UserService userService, UserDetailsService userDetailsService, CourseService courseService) {
+    public UserController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, EnrollmentService enrollmentService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
         this.courseService = courseService;
+        this.enrollmentService = enrollmentService;
     }
 
 
@@ -71,6 +74,11 @@ public class UserController {
     public String studentPage(Model model, Principal principal){
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
+
+        List<Integer> courseIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Course> studentCourses = courseService.findCoursesByIds(courseIds);
+
+        model.addAttribute("studentCourses", studentCourses);
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         return "student_home_page";

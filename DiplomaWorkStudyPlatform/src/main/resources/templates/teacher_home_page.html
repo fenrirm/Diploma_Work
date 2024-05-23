@@ -22,7 +22,10 @@
     </div>
     <div class="content" id="content">
         <h2>My courses</h2>
-        <div id="teacherCourses" class="course-container">
+        <div th:if="${teacherCourses.isEmpty()}">
+            <p>You have not created any courses yet.</p>
+        </div>
+        <div th:if="${!teacherCourses.isEmpty()}" id="teacherCourses" class="course-container">
             <table>
                 <thead>
                 <tr>

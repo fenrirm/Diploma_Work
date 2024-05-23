@@ -44,6 +44,12 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Course> courses;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Test> tests;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Enrollment> enrollments;
+
     public User(String username, String password, String fullName, Role role) {
         this.username = username;
         this.password = password;

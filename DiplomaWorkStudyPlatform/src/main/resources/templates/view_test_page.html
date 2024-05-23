@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Test</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/create_test.js"></script>
+    <script src="/test_view.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <a th:href="@{/teacher_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/teacher_tests}" class="btn btn-primary">My tests</a>
+            <a th:href="@{/teacher_students}" class="btn btn-primary">My students</a>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">Settings</a>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <div class="test-details">
+            <h2 th:text="'Test: ' + ${test.title}">Test Title</h2>
+            <div id="test-content" th:data-content="${test.content}"></div>
+            <div class="course-details">
+                <h3>Course:</h3>
+                <p th:if="${course != null}" th:text="${course.title}">Course Title</p>
+                <p th:if="${course == null}">This test does not belong to any course</p>
+            </div>
+        </div>
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+</body>
+</html>

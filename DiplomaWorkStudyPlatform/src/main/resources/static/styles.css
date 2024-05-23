@@ -495,3 +495,120 @@ th {
     display: none;
     margin-top: 10px;
 }
+
+.test-details {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #e0f2fe;
+}
+
+.test-details h2 {
+    margin: 10px 0;
+    color: #1e3a8a;
+}
+
+.test-details p {
+    margin: 10px 0;
+}
+
+.test-details ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.test-details li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.question p {
+    margin: 5px 0;
+}
+
+.form-select, .add-btn {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-select {
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-test-container, .add-new-test-container {
+    margin: 20px;
+}
+
+.add-test-section {
+    display: flex;
+    align-items: flex-start;
+}
+
+.add-test-container form, .add-new-test-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.add-test-container label, .add-new-test-container label {
+    margin-bottom: 10px;
+}
+
+.add-test-container .add-btn {
+    margin-top: 10px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.join-course-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.join-course-form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.join-course-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    box-shadow: #585858 4px 4px 0 0, azure 4px 4px 0 1px;
+    color: white;
+    cursor: pointer;
+}
+
+.join-course-form button:hover {
+    background-color: #0056b3;
+}

@@ -1,12 +1,13 @@
 package com.shevchenko.DiplomaWorkStudyPlatform.controllers;
 
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
+import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.CourseService;
+import com.shevchenko.DiplomaWorkStudyPlatform.services.TestService;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +22,14 @@ public class CourseController {
     private final CourseService courseService;
     private final UserService userService;
     private final UserDetailsService userDetailsService;
+    private final TestService testService;
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService, UserDetailsService userDetailsService) {
+    public CourseController(CourseService courseService, UserService userService, UserDetailsService userDetailsService, TestService testService) {
         this.courseService = courseService;
         this.userService = userService;
         this.userDetailsService = userDetailsService;
+        this.testService = testService;
     }
 
     @PostMapping("/courses/create")
@@ -60,6 +63,17 @@ public class CourseController {
             return "redirect:/error";
         }
     }
+
+    @PostMapping("/teacher_add_test_to_course")
+    public String addTestToCourse(@RequestParam int testId, @RequestParam int courseId) {
+        Test test = testService.findTestById(testId).orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + testId));
+        Course course = courseService.findCourseByCourseId(courseId);
+        test.setCourse(course);
+        testService.save(test);
+        return "redirect:/teacher_edit_course/" + courseId;
+    }
+
+
 
 
 

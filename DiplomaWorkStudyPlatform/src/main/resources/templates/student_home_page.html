@@ -1,60 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+    <title>Dashboard</title>
 
-        .dashboard {
-            background-color: #f4f4f4;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            position: relative;
-        }
-
-        .user-name {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .logout-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-        }
-
-        .logout-btn:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/search_sort.js"></script>
+    <script src="/course_delete.js"></script>
+    <script src="/course_leave.js"></script>
 </head>
 <body>
+
 <div class="dashboard">
-    <div class="user-name">
-        <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <a th:href="@{/student_home}" class="btn btn-primary">My courses</a>
+            <a th:href="@{/student_tests}" class="btn btn-primary">My results</a>
+            <a th:href="@{/student_teachers}" class="btn btn-primary">My teachers</a>
+            <a th:href="@{/student_home}" class="btn btn-primary">Settings</a>
+        </div>
     </div>
-    <a th:href="@{/login}" class="logout-btn">Logout</a>
+    <div class="content" id="content">
+        <h2>My courses</h2>
+        <div th:if="${studentCourses.isEmpty()}">
+            <p>You are not enrolled in any courses.</p>
+        </div>
+        <div th:if="${!studentCourses.isEmpty()}" id="studentCourses" class="course-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="search-container">
+                            <label for="searchInput">Search by Title:</label>
+                            <input type="text" id="searchInput" name="searchInput">
+                        </div>
+                    </th>
+                    <th scope="col">Points</th>
+                    <th scope="col">Course Key</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="course : ${studentCourses}" th:id="'course_' + ${course.id}">
+                    <td th:text="${course.title}"></td>
+                    <td th:text="${course.points}"></td>
+                    <td th:text="${course.courseKey}"></td>
+                    <td class="button-container">
+                        <a th:href="@{'/student_view_course/' + ${course.id}}">
+                            <button class="view-button">View</button>
+                        </a>
+                        <button class="delete-button" th:onclick="'leaveCourse(\'' + ${course.id} + '\')'" >Leave</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="content-buttons">
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            <form class="join-course-form" th:action="@{/join_course}" method="post">
+                <input type="text" name="courseKey" placeholder="Enter course key" required>
+                <button type="submit" class="btn btn-primary">Join course</button>
+            </form>
+        </div>
+    </div>
+    <div class="user-info">
+        <div class="user-name">
+            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+        </div>
+        <a th:href="@{/login}" class="logout-btn">Logout</a>
+    </div>
 </div>
+
 </body>
 </html>

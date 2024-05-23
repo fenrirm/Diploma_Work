@@ -81,5 +81,13 @@ public class CourseService {
         save(course);
     }
 
+    public Course findCourseByCourseKey(String courseKey){
+        return courseRepository.findCourseByCourseKey(courseKey);
+    }
+
+    public List<Course> findCoursesByIds(List<Integer> courseIds) {
+        return courseRepository.findAllById(courseIds);
+    }
+
 
 }

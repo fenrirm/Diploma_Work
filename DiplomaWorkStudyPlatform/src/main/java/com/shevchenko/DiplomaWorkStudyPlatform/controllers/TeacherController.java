@@ -4,6 +4,7 @@ import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.CourseService;
+import com.shevchenko.DiplomaWorkStudyPlatform.services.EnrollmentService;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.TestService;
 import com.shevchenko.DiplomaWorkStudyPlatform.services.UserService;
 import jakarta.validation.Valid;
@@ -17,8 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Controller
 public class TeacherController {
@@ -27,12 +27,15 @@ public class TeacherController {
     private final CourseService courseService;
     private final TestService testService;
 
+    private final EnrollmentService enrollmentService;
+
     @Autowired
-    public TeacherController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, TestService testService) {
+    public TeacherController(UserService userService, UserDetailsService userDetailsService, CourseService courseService, TestService testService, EnrollmentService enrollmentService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
         this.courseService = courseService;
         this.testService = testService;
+        this.enrollmentService = enrollmentService;
     }
 
 
@@ -41,10 +44,7 @@ public class TeacherController {
     public String teacherTestsPage(Model model, Principal principal){
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
-        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
-        List<Test> teacherTests = teacherCourses.stream()
-                .flatMap(course -> testService.findTestsByCourseId(course.getId()).stream())
-                .toList();
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
         model.addAttribute("teacherTests", teacherTests);
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
@@ -55,6 +55,20 @@ public class TeacherController {
     public String teacherStudentsPage(Model model, Principal principal){
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+
+        List<Integer> teacherStudentsIds = new ArrayList<>();
+        for (Course course : teacherCourses) {
+            List<Integer> studentIds = enrollmentService.getUserIdsByCourseId(course.getId());
+            teacherStudentsIds.addAll(studentIds);
+        }
+
+        Set<Integer> uniqueStudentIds = new HashSet<>(teacherStudentsIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(new ArrayList<>(uniqueStudentIds));
+
+        model.addAttribute("teacherStudent", teacherStudents);
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         return "teacher_students_page";
@@ -77,10 +91,15 @@ public class TeacherController {
         User user = userService.findUserByUsername(principal.getName());
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
+        List<Test> tests = testService.findTestsByCourseId(id);
+        for (Test test : tests) {
+            test.setCourse(null);
+            testService.save(test);
+        }
         courseService.delete(id);
         return "redirect:/teacher_home";
     }
-    @DeleteMapping ("/teacher_delete_test/{id}")
+    @DeleteMapping ("/teacher_delete_course_test/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String teacherDeleteCourseTestPage(Model model, Principal principal, @PathVariable("id") int id){
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
@@ -88,7 +107,7 @@ public class TeacherController {
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         int courseId = testService.findCourseIdByTestId(id);
-        testService.deleteTestById(id);
+        testService.removeTestFromCourseById(id);
         return "redirect:/teacher_edit_course/"+courseId;
     }
 
@@ -121,11 +140,13 @@ public class TeacherController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
         List<Test> courseTests = testService.findTestsByCourseId(courseId);
+        List<Test> freeTests = testService.findTestsByTeacherIdAndCourseIsNull(user.getId());
         Course course = courseService.findCourseByCourseId(courseId);
         List<String> studyMaterials = courseService.getStudyMaterials(courseId);
         model.addAttribute("course", course);
         model.addAttribute("studyMaterials", studyMaterials);
         model.addAttribute("courseTests", courseTests);
+        model.addAttribute("freeTests", freeTests);
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         return "edit_course_page";
@@ -165,5 +186,67 @@ public class TeacherController {
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("course", course);
         return "create_test_course_edit";
+    }
+
+    @GetMapping("/teacher_view_test/{testId}")
+    public String teacherViewTest(@PathVariable int testId, Model model, Principal principal) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
+        User user = userService.findUserByUsername(principal.getName());
+
+        Optional<Test> optionalTest = testService.findTestById(testId);
+
+        if (optionalTest.isEmpty()) {
+            System.out.println("Test was not found!");
+            model.addAttribute("error", "Test was not found");
+            return "error_page";
+        }
+
+        Test test = optionalTest.get();
+
+        Course course = null;
+        if (test.getCourse() != null && test.getCourse().getId() != null) {
+            course = courseService.findCourseByCourseId(test.getCourse().getId());
+        }
+
+        model.addAttribute("user", userDetails);
+        model.addAttribute("fullName", user.getFullName());
+        model.addAttribute("test", test);
+        model.addAttribute("course", course);
+
+        return "view_test_page";
+    }
+
+
+
+    @GetMapping("/teacher_edit_test/{testId}")
+    public String teacherEditTest(@PathVariable int testId, Model model, Principal principal){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
+        User user = userService.findUserByUsername(principal.getName());
+
+        Optional<Test> optionalTest = testService.findTestById(testId);
+
+        if (optionalTest.isEmpty()) {
+            System.out.println("Test was not found!");
+            model.addAttribute("error", "Test was not found");
+            return "error_page";
+        }
+
+        Test test = optionalTest.get();
+
+        model.addAttribute("user", userDetails);
+        model.addAttribute("fullName", user.getFullName());
+        model.addAttribute("test", test);
+        return "edit_test_page";
+    }
+
+    @DeleteMapping ("/teacher_delete_test/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String teacherDeleteTest(Model model, Principal principal, @PathVariable("id") int id){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
+        User user = userService.findUserByUsername(principal.getName());
+        model.addAttribute("user", userDetails);
+        model.addAttribute("fullName", user.getFullName());
+        testService.deleteTestById(id);
+        return "redirect:/teacher_tests";
     }
 }

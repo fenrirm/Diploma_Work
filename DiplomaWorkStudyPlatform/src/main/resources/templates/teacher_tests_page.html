@@ -6,8 +6,8 @@
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/styles.css">
-    <script src="/test_scripts.js"></script>
     <script src="/search_sort.js"></script>
+    <script src="/test_delete.js"></script>
 </head>
 <body>
 
@@ -42,8 +42,12 @@
                     <td th:text="${test.title}"></td>
                     <td th:text="${test.points}"></td>
                     <td class="button-container">
-                        <button class="view-button" id="viewTestBtn">View</button>
-                        <button class="edit-button" id="editTestBtn">Edit</button>
+                        <a th:href="@{'/teacher_view_test/' + ${test.id}}">
+                            <button class="view-button">View</button>
+                        </a>
+                        <a th:href="@{'/teacher_edit_test/' + ${test.id}}">
+                            <button class="edit-button">Edit</button>
+                        </a>
                         <button class="delete-button" th:onclick="'deleteTest(\'' + ${test.id} + '\')'" id="deleteTestBtn">Delete</button>
                     </td>
                 </tr>
