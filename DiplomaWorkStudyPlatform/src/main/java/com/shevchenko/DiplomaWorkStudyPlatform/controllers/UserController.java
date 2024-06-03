@@ -15,9 +15,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -100,6 +102,36 @@ public class UserController {
             studentCoursePoints.put(course.getId(), totalPoints);
         }
 
+        List<Test> studentCoursesTests = new ArrayList<>();
+        for (Course course : studentCourses) {
+            List<Test> tests = testService.findTestsByCourseId(course.getId());
+            studentCoursesTests.addAll(tests);
+        }
+
+        List<StudentResult> studentResults = studentResultService.getStudentResultByUserId(user.getId());
+        List<Integer> studentPassedTests = new ArrayList<>();
+        for (StudentResult result : studentResults) {
+            studentPassedTests.add(result.getTest().getId());
+        }
+
+        studentCoursesTests.removeIf(test -> studentPassedTests.contains(test.getId()));
+
+        List<Integer> studentCoursesIds = enrollmentService.getCourseIdsByUserId(user.getId());
+
+        List<Integer> studentTeachersIds = new ArrayList<>();
+        for (Integer courseId : studentCoursesIds) {
+            int teacherId = courseService.getUserIdByCourseId(courseId);
+            if (teacherId != 0) {
+                studentTeachersIds.add(teacherId);
+            }
+        }
+
+
+        model.addAttribute("courseCount", studentCourses.size());
+        model.addAttribute("passedTests", studentPassedTests.size());
+        model.addAttribute("notPassedTests", studentCoursesTests.size());
+        model.addAttribute("studentTeachers", studentTeachersIds.size());
+
         model.addAttribute("studentCourses", studentCourses);
         model.addAttribute("coursePoints", coursePoints);
         model.addAttribute("studentCoursePoints", studentCoursePoints);
@@ -115,8 +147,21 @@ public class UserController {
 
         User user = userService.findUserByUsername(principal.getName());
         List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
-        model.addAttribute("teacherCourses", teacherCourses);
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
 
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
+        model.addAttribute("teacherCourses", teacherCourses);
         model.addAttribute("fullName", user.getFullName());
 
         return "teacher_home_page";

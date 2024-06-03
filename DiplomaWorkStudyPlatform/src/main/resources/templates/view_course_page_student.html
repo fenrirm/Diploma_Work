@@ -7,16 +7,18 @@
 
     <link rel="stylesheet" href="/styles.css">
     <script src="/search_sort.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
 <div class="dashboard">
     <div class="sidebar">
         <div class="sidebar-buttons">
-            <a th:href="@{/student_home}" class="btn btn-primary">My courses</a>
-            <a th:href="@{/student_tests}" class="btn btn-primary">My results</a>
-            <a th:href="@{/student_teachers}" class="btn btn-primary">My teachers</a>
-            <a th:href="@{/student_home}" class="btn btn-primary">Settings</a>
+            <H3>Student</H3>
+            <i class="fas fa-chalkboard-teacher fa-4x"></i>
+            <a th:href="@{/student_home}" class="btn btn-primary">Courses <i class="fa-solid fa-table"></i> </a>
+            <a th:href="@{/student_tests}" class="btn btn-primary">Results <i class="fa-solid fa-list-ul"></i> </a>
+            <a th:href="@{/student_teachers}" class="btn btn-primary">Teachers <i class="fas fa-chalkboard-teacher fa-1x"></i></a>
         </div>
     </div>
     <div class="content" id="content">
@@ -39,7 +41,7 @@
                 <p>You do not have any tests</p>
             </div>
             <div th:if="${!courseTests.isEmpty()}" id="studentTests" class="course-container">
-                <table>
+                <table class="styled-table">
                     <thead>
                     <tr>
                         <th scope="col">
@@ -58,7 +60,7 @@
                         <td th:text="${test.points}"></td>
                         <td class="button-container">
                             <a th:href="@{'/student_start_test/' + ${test.id}}">
-                                <button class="view-button">Pass</button>
+                                <button class="view-button">Pass <i class="fa-solid fa-play"></i> </button>
                             </a>
                         </td>
                     </tr>
@@ -70,7 +72,15 @@
     </div>
     <div class="user-info">
         <div class="user-name">
-            <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+            <h3>Welcome back, <span th:text="${fullName}">User's name</span></h3>
+            <div class="user-stats">
+                <ul>
+                    <li><i class="fas fa-book"></i> Number of courses you have joined: <span th:text="${courseCount}">0</span></li>
+                    <li><i class="fas fa-file-alt"></i> Number of passed tests: <span th:text="${passedTests}">0</span></li>
+                    <li><i class="fas fa-file-alt"></i> Number of tests to be passed: <span th:text="${notPassedTests}">0</span></li>
+                    <li><i class="fas fa-users"></i> Number of your teachers: <span th:text="${studentTeachers}">0</span></li>
+                </ul>
+            </div>
         </div>
         <a th:href="@{/login}" class="logout-btn">Logout</a>
     </div>

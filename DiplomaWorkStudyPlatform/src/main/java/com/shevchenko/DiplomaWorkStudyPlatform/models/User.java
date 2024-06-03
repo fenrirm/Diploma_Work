@@ -31,7 +31,6 @@ public class User {
             message="Please enter a valid password (at least 8 characters long, containing at least one digit, one lowercase letter, one uppercase letter, one special character, and no whitespace)")
     @Column(name = "password")
     private String password;
-
     @Pattern(regexp="^[A-Z][a-zA-Z]{0,59}\\s[A-Z][a-zA-Z]{0,59}$",
             message="Please enter a valid full name (up to 60 characters for both first and last names, each starting with an uppercase letter)")
     @Column(name = "full_name")

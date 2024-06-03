@@ -91,4 +91,8 @@ public class CourseService {
     public List<Course> findCoursesByIdsAndTeacherId(List<Integer> courseIds, int teacherId) {
         return courseRepository.findByIdInAndUserId(courseIds, teacherId);
     }
+
+    public int getUserIdByCourseId(int courseId){
+        return courseRepository.getUserIdByCourseId(courseId);
+    }
 }

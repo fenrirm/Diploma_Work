@@ -1,5 +1,6 @@
 package com.shevchenko.DiplomaWorkStudyPlatform.services;
 
+import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
 import com.shevchenko.DiplomaWorkStudyPlatform.repositories.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,9 @@ public class TestService {
     public List<Test> findTestsByIds(List<Integer> ids) {
         return testRepository.findAllById(ids);
     }
+
+
+
 
 
 

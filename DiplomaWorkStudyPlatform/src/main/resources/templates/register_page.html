@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Registration</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,24 +23,53 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border: 2px solid #007bff;
     }
+
     h2 {
       margin-bottom: 20px;
       text-align: center;
+      color: #333;
+      position: relative;
+    }
+    .user-icon {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #007bff;
     }
     form {
       display: flex;
       flex-direction: column;
     }
     label {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: bold;
     }
     input[type="text"],
     input[type="password"] {
       padding: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 16px;
+      outline: none;
+    }
+    .password-container {
+      position: relative;
+    }
+    .password-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #ccc;
+    }
+    input[type="radio"] {
+      margin-right: 5px;
     }
     input[type="submit"] {
       padding: 10px;
@@ -48,6 +79,8 @@
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-size: 16px;
+      outline: none;
     }
     input[type="submit"]:hover {
       background-color: #0056b3;
@@ -57,36 +90,71 @@
       color: #4CAF50;
       margin-top: 10px;
     }
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .login-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+    .error-message {
+      color: red;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
 <div class="container">
-  <h2>User Registration</h2>
-  <form action="#" th:action="@{/register}" method="post" th:object="${user}">
+  <h2><i class="fas fa-user user-icon"></i> User Registration</h2>
+  <form th:method="POST" th:action="@{/register}" th:object="${user}">
     <label for="fullName">Full Name:</label>
-    <input type="text" id="fullName" name="fullName" th:value="${param.fullName}" required>
-    <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="color: red"></span>
+    <input type="text" id="fullName" name="fullName" th:value="${param.fullName}" placeholder="Enter your full name" required>
+    <span th:if="${#fields.hasErrors('fullName')}" class="error-message" th:errors="*{fullName}"></span>
 
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" th:value="${param.username}" required>
-    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red"></span>
-    <span th:if="${userexist}" style="color: red">Username is already taken! Choose please another one</span>
+    <input type="text" id="username" name="username" th:value="${param.username}" placeholder="Enter your username" required>
+    <span th:if="${#fields.hasErrors('username')}" class="error-message" th:errors="*{username}"></span>
+    <span th:if="${userexist}" class="error-message">Username is already taken! Please choose another one.</span>
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" th:value="${param.password}" required>
-    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red"></span>
+    <div class="password-container">
+      <input type="password" id="password" name="password" th:value="${param.password}" placeholder="Enter your password" required>
+      <i class="far fa-eye password-icon" id="togglePassword"></i>
+    </div>
+    <span th:if="${#fields.hasErrors('password')}" class="error-message" th:errors="*{password}"></span>
 
     <label>Account Type:</label>
     <div>
-      <label for="teacherRadio"></label><input type="radio" id="teacherRadio" name="role" value="TEACHER"> Teacher
-      <label for="studentRadio"></label><input type="radio" id="studentRadio" name="role" value="STUDENT"> Student
+      <input type="radio" id="teacherRadio" name="role" value="TEACHER" required>
+      <label for="teacherRadio">Teacher</label>
+      <input type="radio" id="studentRadio" name="role" value="STUDENT" required>
+      <label for="studentRadio">Student</label>
     </div>
     <input type="submit" value="Register">
   </form>
   <div class="success-message" th:if="${param.success}">
-    Registration successful!
+    Registration successful! <a th:href="@{/login}">Login</a>
   </div>
-  <span>If you already registered? Log in here:<a th:href="@{/login}">Login</a></span>
+  <div class="login-link">
+    Already registered? <a th:href="@{/login}">Login here</a>
+  </div>
 </div>
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
+
 </body>
 </html>

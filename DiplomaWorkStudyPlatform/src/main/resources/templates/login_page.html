@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,19 +14,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f4f4f4;
         }
         .container {
-            width: 400px;
+            width: 350px;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #007bff;
         }
+
         h2 {
             margin-bottom: 20px;
             text-align: center;
+            color: #333;
         }
         form {
             display: flex;
@@ -32,6 +37,8 @@
         }
         label {
             margin-bottom: 10px;
+            color: #555;
+            font-weight: bold;
         }
         input[type="text"],
         input[type="password"] {
@@ -39,6 +46,8 @@
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
+            outline: none;
         }
         input[type="submit"] {
             padding: 10px;
@@ -48,36 +57,66 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-size: 16px;
+            outline: none;
         }
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
-        .error-message {
+        .error-message,
+        .logout-message {
             text-align: center;
-            color: #4CAF50;
             margin-top: 10px;
         }
-
+        .error-message {
+            color: #ff0000;
+        }
+        .logout-message {
+            color: #4CAF50;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .fa-user-lock {
+            font-size: 48px;
+            color: #007bff;
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 <div class="container">
+    <i class="fas fa-user-lock"></i>
     <h2>User Login</h2>
     <form th:method="POST" th:action="@{/login}" th:object="${user}">
-        <label for="username">Username:</label>
-        <input type="text" th:field="*{username}" id="username"/>
-        <label for="password">Password:</label>
-        <input type="password" th:field="*{password}" id="password"/>
+        <label for="username">Username</label>
+        <input type="text" th:field="*{username}" id="username" placeholder="Enter your username" required/>
+
+        <label for="password">Password</label>
+        <input type="password" th:field="*{password}" id="password" placeholder="Enter your password" required/>
+
         <input type="submit" value="Login">
     </form>
     <div class="error-message" th:if="${param.error}">
-        Invalid username or password!
+        <i class="fas fa-exclamation-circle"></i> Invalid username or password!
     </div>
     <div class="logout-message" th:if="${param.logout}">
-        Logout successfully!
+        <i class="fas fa-check-circle"></i> Logout successfully!
     </div>
-
-    <span>Register here:<a th:href="@{/register}">Register</a></span>
+    <div class="register-link">
+        Don't have an account? <a th:href="@{/register}">Register here</a>
+    </div>
 </div>
 </body>
 </html>

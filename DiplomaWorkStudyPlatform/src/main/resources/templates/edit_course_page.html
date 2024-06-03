@@ -7,16 +7,18 @@
     <link rel="stylesheet" href="/styles.css">
     <script src="/search_sort.js"></script>
     <script src="/test_course_delete.js"></script>
-    <script src="/course_edit.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="dashboard">
     <div class="sidebar">
         <div class="sidebar-buttons">
-            <a th:href="@{/teacher_home}" class="btn btn-primary">My courses</a>
-            <a th:href="@{/teacher_tests}" class="btn btn-primary">My tests</a>
-            <a th:href="@{/teacher_students}" class="btn btn-primary">My students</a>
-            <a th:href="@{/teacher_home}" class="btn btn-primary">Settings</a>
+            <H3>Teacher</H3>
+            <i class="fas fa-chalkboard-teacher fa-4x"></i>
+            <a th:href="@{/teacher_home}" class="btn btn-primary">Courses <i class="fa-solid fa-table"></i></a>
+            <a th:href="@{/teacher_tests}" class="btn btn-primary">Tests <i class="fa-solid fa-list-ul"></i></a>
+            <a th:href="@{/teacher_students}" class="btn btn-primary">Students <i class="fa-solid fa-user-graduate"></i></a>
+
         </div>
     </div>
     <div class="content" id="content">
@@ -29,13 +31,13 @@
                     <input type="text" id="courseTitle" th:field="*{title}" class="form-input"/>
                     <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red" class="error-message"></div>
                 </div>
-                <button type="submit" class="add-btn">Save Changes</button>
+                <button type="submit" class="add-btn">Save Changes <i class="fa-solid fa-file-arrow-down"></i> </button>
             </form>
         </div>
         <div class="content-block">
             <h2>Study materials</h2>
             <div class="tasks-table-container">
-                <table>
+                <table class="styled-table">
                     <thead>
                     <tr>
                         <th scope="col">Study material</th>
@@ -52,22 +54,22 @@
                                   th:text="${studyMaterial}"></span>
                         </td>
                         <td class="button-container">
-                            <button class="delete-button" data-material-id="${studyMaterial.id}" data-course-id="${course.id}">Delete</button>
+                            <button class="delete-button" data-material-id="${studyMaterial.id}" data-course-id="${course.id}">Delete <i class="fa-solid fa-trash"></i> </button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="add-btn" onclick="addMaterialField()">Add some material</button>
+            <button type="button" class="add-btn" onclick="addMaterialField()">Add some material <i class="fa-solid fa-plus"></i> </button>
             <div id="materialsContainer" >
                 <!-- Нові поля для матеріалів будуть додаватися сюди -->
             </div>
-            <button type="button" id="saveMaterialsBtn" class="add-btn" th:attr="data-save-url=@{/material/save(courseId=${course.id})}">Save Materials</button>
+            <button type="button" id="saveMaterialsBtn" class="add-btn" th:attr="data-save-url=@{/material/save(courseId=${course.id})}">Save Materials <i class="fa-solid fa-file-arrow-down"></i> </button>
         </div>
         <div class="content-block">
             <h2>Tasks</h2>
             <div class="tasks-table-container">
-                <table>
+                <table class="styled-table">
                     <thead>
                     <tr>
                         <th scope="col">
@@ -85,7 +87,7 @@
                         <td th:text="${test.title}"></td>
                         <td th:text="${test.points}"></td>
                         <td class="button-container">
-                            <button class="delete-button" th:onclick="'deleteTest(\'' + ${test.id} + '\', \'' + ${courseId} + '\')'">Delete</button>
+                            <button class="delete-button" th:onclick="'deleteTest(\'' + ${test.id} + '\', \'' + ${courseId} + '\')'">Delete <i class="fa-solid fa-trash"></i> </button>
 
                         </td>
                     </tr>
@@ -101,13 +103,13 @@
                             <option value="">Select a free test</option>
                             <option th:each="test : ${freeTests}" th:value="${test.id}" th:text="${test.title}"></option>
                         </select>
-                        <button type="submit" class="add-btn">Add selected test</button>
+                        <button type="submit" class="add-btn">Add selected test <i class="fa-solid fa-plus"></i> </button>
                     </form>
                 </div>
                 <div class="add-new-test-container">
                     <form>
                         <label>Add a new test to the course:</label>
-                        <a th:href="@{/teacher_create_test/{courseId}(courseId=${course.id})}" class="add-btn">Add new test</a>
+                        <a th:href="@{/teacher_create_test/{courseId}(courseId=${course.id})}" class="add-btn">Add new test <i class="fa-solid fa-plus"></i> </a>
                     </form>
                 </div>
             </div>
@@ -116,9 +118,17 @@
     <div class="user-info">
         <div class="user-name">
             <h2>Welcome back, <span th:text="${fullName}">User's name</span></h2>
+            <div class="user-stats">
+                <ul>
+                    <li><i class="fas fa-book"></i> Number of created courses: <span th:text="${courseCount}">0</span></li>
+                    <li><i class="fas fa-file-alt"></i> Number of created tests: <span th:text="${testCount}">0</span></li>
+                    <li><i class="fas fa-users"></i> Number of students: <span th:text="${studentCount}">0</span></li>
+                </ul>
+            </div>
         </div>
-        <a th:href="@{/login}" class="logout-btn">Logout</a>
+        <a th:href="@{/login}" class="logout-btn">Logout <i class="fa-solid fa-right-from-bracket"></i></a>
     </div>
 </div>
+<script src="/course_edit.js"></script>
 </body>
 </html>

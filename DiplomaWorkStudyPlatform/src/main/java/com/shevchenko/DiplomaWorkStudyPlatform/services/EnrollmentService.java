@@ -42,5 +42,9 @@ public class EnrollmentService {
         return enrollmentRepository.findUserIdsByCourseId(courseId);
     }
 
+    public List<Integer> getUserIdsByCourseIds(List<Integer> courseIds) {
+        return enrollmentRepository.findUserIdsByCourseIds(courseIds);
+    }
+
 
 }

@@ -22,15 +22,14 @@ body {
 
 .sidebar {
     width: 20%;
-    background-color: #ddd;
+    background-color: #c4daf8;
     align-items: stretch;
 }
 
 .content {
     width: 60%;
-    background-color: #eee;
+    background-color: #f5f0e2;
     overflow-y: auto;
-
 }
 
 .content-buttons {
@@ -127,7 +126,7 @@ body {
 
 .user-info {
     width: 20%;
-    background-color: #ccc;
+    background-color: #c4daf8;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,6 +139,28 @@ body {
     margin-bottom: 20px;
 }
 
+.user-stats {
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.user-stats ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-stats ul li {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.user-stats ul li i {
+    margin-right: 10px;
+    color: #3498db;
+}
 .logout-btn {
     background-color: red;
     color: white;
@@ -611,4 +632,68 @@ th {
 
 .join-course-form button:hover {
     background-color: #0056b3;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    text-align: left;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.styled-table thead tr {
+    background-color: #3498db;
+    color: #000000;
+    text-align: left;
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #3498db;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #3498db;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+ul li {
+    background: #f4f4f4;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+ul li a:hover {
+    text-decoration: underline;
+    color: #007BFF;
 }

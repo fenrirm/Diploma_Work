@@ -44,3 +44,4 @@ public class StudentResult {
         this.completionTime = completionTime;
     }
 }
+

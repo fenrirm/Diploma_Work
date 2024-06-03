@@ -42,6 +42,20 @@ public class TeacherController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
         List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
         model.addAttribute("teacherTests", teacherTests);
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
@@ -64,6 +78,21 @@ public class TeacherController {
         Set<Integer> uniqueStudentIds = new HashSet<>(teacherStudentsIds);
 
         List<User> teacherStudents = userService.findUsersByIds(new ArrayList<>(uniqueStudentIds));
+
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudentsList = userService.findUsersByIds(studentIds);
+
+        model.addAttribute("teacherCourses", teacherCourses);
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudentsList.size());
 
         model.addAttribute("teacherStudent", teacherStudents);
         model.addAttribute("user", userDetails);
@@ -88,6 +117,22 @@ public class TeacherController {
         }
         User student = userService.findUserById(studentId);
 
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
+
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("courseResults", courseResults);
@@ -99,6 +144,22 @@ public class TeacherController {
     public String teacherCreateCoursePage(Model model, Principal principal){
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("course", new Course());
@@ -149,6 +210,22 @@ public class TeacherController {
         User user = userService.findUserByUsername(principal.getName());
         List<Test> courseTests = testService.findTestsByCourseId(courseId);
         List<String> studyMaterials = courseService.getStudyMaterials(courseId);
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
         model.addAttribute("studyMaterials", studyMaterials);
         model.addAttribute("courseTests", courseTests);
         model.addAttribute("user", userDetails);
@@ -164,6 +241,22 @@ public class TeacherController {
         List<Test> freeTests = testService.findTestsByTeacherIdAndCourseIsNull(user.getId());
         Course course = courseService.findCourseByCourseId(courseId);
         List<String> studyMaterials = courseService.getStudyMaterials(courseId);
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
         model.addAttribute("course", course);
         model.addAttribute("studyMaterials", studyMaterials);
         model.addAttribute("courseTests", courseTests);
@@ -191,6 +284,22 @@ public class TeacherController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
         List<Course> courses = courseService.findCoursesByUserId(user.getId());
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("courses", courses);
@@ -202,6 +311,22 @@ public class TeacherController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
         User user = userService.findUserByUsername(principal.getName());
         Course course = courseService.findCourseByCourseId(courseId);
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("course", course);
@@ -228,6 +353,22 @@ public class TeacherController {
             course = courseService.findCourseByCourseId(test.getCourse().getId());
         }
 
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
+
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("test", test);
@@ -252,6 +393,22 @@ public class TeacherController {
         }
 
         Test test = optionalTest.get();
+
+        List<Course> teacherCourses = courseService.findCoursesByUserId(user.getId());
+        List<Test> teacherTests = testService.getTestsByTeacherId(user.getId());
+
+        List<Integer> courseIds = teacherCourses.stream()
+                .map(Course::getId)
+                .toList();
+
+        List<Integer> studentIds = enrollmentService.getUserIdsByCourseIds(courseIds);
+
+        List<User> teacherStudents = userService.findUsersByIds(studentIds);
+
+
+        model.addAttribute("courseCount", teacherCourses.size());
+        model.addAttribute("testCount", teacherTests.size());
+        model.addAttribute("studentCount", teacherStudents.size());
 
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());

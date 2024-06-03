@@ -56,10 +56,12 @@ public class CourseController {
         if (course != null && course.getUser().getId() == user.getId()) {
             String existingMaterials = course.getStudyMaterials();
             String updatedMaterials = existingMaterials != null ? existingMaterials + ";" + material : material;
+            System.out.println(updatedMaterials);
             course.setStudyMaterials(updatedMaterials);
             courseService.updateCourseMaterials(course);
             return "redirect:/teacher_edit_course/" + courseId;
         } else {
+            System.out.println("error while saving");
             return "redirect:/error";
         }
     }
@@ -71,6 +73,7 @@ public class CourseController {
         test.setCourse(course);
         testService.save(test);
         return "redirect:/teacher_edit_course/" + courseId;
+
     }
 
 

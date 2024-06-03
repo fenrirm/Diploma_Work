@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.shevchenko.DiplomaWorkStudyPlatform.models.Course;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.StudentResult;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.Test;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
@@ -52,6 +53,35 @@ public class StudentController {
         List<Integer> studentPassedTestIds = studentResultService.getTestIdsByCourseIdAndUserId(courseId, user.getId());
         List<Test> studentCoursePassedTests = testService.findTestsByIds(studentPassedTestIds);
         courseTests.removeIf(test -> studentPassedTestIds.contains(test.getId()));
+
+        List<Integer> courseIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Course> studentCourses = courseService.findCoursesByIds(courseIds);
+        List<Test> studentCoursesTests = new ArrayList<>();
+        for (Course course : studentCourses) {
+            List<Test> tests = testService.findTestsByCourseId(course.getId());
+            studentCoursesTests.addAll(tests);
+        }
+        List<StudentResult> studentResultsTests = studentResultService.getStudentResultByUserId(user.getId());
+        List<Integer> studentPassedTests = new ArrayList<>();
+        for (StudentResult result : studentResultsTests) {
+            studentPassedTests.add(result.getTest().getId());
+        }
+        studentCoursesTests.removeIf(test -> studentPassedTests.contains(test.getId()));
+        List<Integer> studentCoursesIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Integer> studentTeachersIds = new ArrayList<>();
+        for (Integer course_Id : studentCoursesIds) {
+            int teacherId = courseService.getUserIdByCourseId(course_Id);
+            if (teacherId != 0) {
+                studentTeachersIds.add(teacherId);
+            }
+        }
+
+
+        model.addAttribute("courseCount", studentCourses.size());
+        model.addAttribute("passedTests", studentPassedTests.size());
+        model.addAttribute("notPassedTests", studentCoursesTests.size());
+        model.addAttribute("studentTeachers", studentTeachersIds.size());
+
         model.addAttribute("studentCoursePassedTests", studentCoursePassedTests);
         model.addAttribute("studyMaterials", studyMaterials);
         model.addAttribute("courseTests", courseTests);
@@ -89,6 +119,34 @@ public class StudentController {
             testInfo.put("completionTime", result.getCompletionTime());
             studentTestInfos.add(testInfo);
         }
+
+        List<Integer> courseIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Course> studentCourses = courseService.findCoursesByIds(courseIds);
+        List<Test> studentCoursesTests = new ArrayList<>();
+        for (Course course : studentCourses) {
+            List<Test> tests = testService.findTestsByCourseId(course.getId());
+            studentCoursesTests.addAll(tests);
+        }
+        List<StudentResult> studentResultsTests = studentResultService.getStudentResultByUserId(user.getId());
+        List<Integer> studentPassedTests = new ArrayList<>();
+        for (StudentResult result : studentResultsTests) {
+            studentPassedTests.add(result.getTest().getId());
+        }
+        studentCoursesTests.removeIf(test -> studentPassedTests.contains(test.getId()));
+        List<Integer> studentCoursesIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Integer> studentTeachersIds = new ArrayList<>();
+        for (Integer courseId : studentCoursesIds) {
+            int teacherId = courseService.getUserIdByCourseId(courseId);
+            if (teacherId != 0) {
+                studentTeachersIds.add(teacherId);
+            }
+        }
+
+
+        model.addAttribute("courseCount", studentCourses.size());
+        model.addAttribute("passedTests", studentPassedTests.size());
+        model.addAttribute("notPassedTests", studentCoursesTests.size());
+        model.addAttribute("studentTeachers", studentTeachersIds.size());
 
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
@@ -132,12 +190,96 @@ public class StudentController {
             return "error_page";
         }
 
+        List<Integer> courseIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Course> studentCourses = courseService.findCoursesByIds(courseIds);
+        List<Test> studentCoursesTests = new ArrayList<>();
+        for (Course course : studentCourses) {
+            List<Test> tests = testService.findTestsByCourseId(course.getId());
+            studentCoursesTests.addAll(tests);
+        }
+        List<StudentResult> studentResultsTests = studentResultService.getStudentResultByUserId(user.getId());
+        List<Integer> studentPassedTests = new ArrayList<>();
+        for (StudentResult result : studentResultsTests) {
+            studentPassedTests.add(result.getTest().getId());
+        }
+        studentCoursesTests.removeIf(Test -> studentPassedTests.contains(test.getId()));
+        List<Integer> studentCoursesIdsList = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Integer> studentTeachersIdsList = new ArrayList<>();
+        for (Integer courseId : studentCoursesIdsList) {
+            int teacherId = courseService.getUserIdByCourseId(courseId);
+            if (teacherId != 0) {
+                studentTeachersIdsList.add(teacherId);
+            }
+        }
+
+
+        model.addAttribute("courseCount", studentCourses.size());
+        model.addAttribute("passedTests", studentPassedTests.size());
+        model.addAttribute("notPassedTests", studentCoursesTests.size());
+        model.addAttribute("studentTeachers", studentTeachersIdsList.size());
+
         model.addAttribute("user", userDetails);
         model.addAttribute("fullName", user.getFullName());
         model.addAttribute("test", test);
         return "start_test_page";
     }
 
+    @GetMapping("/student_teachers")
+    public String teacherStudentsPage(Model model, Principal principal){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
+        User user = userService.findUserByUsername(principal.getName());
+
+        List<Integer> studentCoursesIds = enrollmentService.getCourseIdsByUserId(user.getId());
+
+        List<Integer> studentTeachersIds = new ArrayList<>();
+        for (Integer courseId : studentCoursesIds) {
+            int teacherId = courseService.getUserIdByCourseId(courseId);
+            if (teacherId != 0) {
+                studentTeachersIds.add(teacherId);
+            }
+        }
+
+        Set<User> studentTeachers = new HashSet<>();
+        for (Integer teacherId : studentTeachersIds) {
+            User teacher = userService.findUserById(teacherId);
+            if (teacher != null) {
+                studentTeachers.add(teacher);
+            }
+        }
+
+        List<Integer> courseIds = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Course> studentCourses = courseService.findCoursesByIds(courseIds);
+        List<Test> studentCoursesTests = new ArrayList<>();
+        for (Course course : studentCourses) {
+            List<Test> tests = testService.findTestsByCourseId(course.getId());
+            studentCoursesTests.addAll(tests);
+        }
+        List<StudentResult> studentResultsTests = studentResultService.getStudentResultByUserId(user.getId());
+        List<Integer> studentPassedTests = new ArrayList<>();
+        for (StudentResult result : studentResultsTests) {
+            studentPassedTests.add(result.getTest().getId());
+        }
+        studentCoursesTests.removeIf(test -> studentPassedTests.contains(test.getId()));
+        List<Integer> studentCoursesIdsList = enrollmentService.getCourseIdsByUserId(user.getId());
+        List<Integer> studentTeachersIdsList = new ArrayList<>();
+        for (Integer courseId : studentCoursesIdsList) {
+            int teacherId = courseService.getUserIdByCourseId(courseId);
+            if (teacherId != 0) {
+                studentTeachersIdsList.add(teacherId);
+            }
+        }
+
+
+        model.addAttribute("courseCount", studentCourses.size());
+        model.addAttribute("passedTests", studentPassedTests.size());
+        model.addAttribute("notPassedTests", studentCoursesTests.size());
+        model.addAttribute("studentTeachersList", studentTeachersIdsList.size());
+
+        model.addAttribute("studentTeachers", studentTeachers);
+        model.addAttribute("user", userDetails);
+        model.addAttribute("fullName", user.getFullName());
+        return "student_teachers_page";
+    }
 
 
 

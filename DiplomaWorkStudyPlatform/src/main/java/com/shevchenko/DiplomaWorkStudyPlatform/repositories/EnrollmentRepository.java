@@ -5,6 +5,7 @@ import com.shevchenko.DiplomaWorkStudyPlatform.models.Enrollment;
 import com.shevchenko.DiplomaWorkStudyPlatform.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Integer>
 
     @Query("SELECT e.user.id FROM Enrollment e WHERE e.course.id = :courseId")
     List<Integer> findUserIdsByCourseId(int courseId);
+
+    @Query("SELECT e.user.id FROM Enrollment e WHERE e.course.id IN :courseIds")
+    List<Integer> findUserIdsByCourseIds(@Param("courseIds") List<Integer> courseIds);
 
     void deleteEnrollmentByCourseIdAndUserId(int courseId, int userId);
 

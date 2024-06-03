@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const questionsContainer = document.getElementById('questionsContainer');
         const questionDiv = document.createElement('div');
         questionDiv.className = 'question';
+        questionDiv.setAttribute('data-question-type', questionType);
 
         let questionTypeLabel;
         switch (questionType) {
@@ -151,11 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const totalPoints = document.getElementById('totalPoints').value;
         const courseId = document.getElementById('courseId').value;
 
-
+        let questionIndex = 0;
         const questions = [];
         const questionElements = document.querySelectorAll('.question');
         questionElements.forEach((questionElement) => {
             const questionText = questionElement.querySelector('.question-text').value;
+            const questionType = questionElement.getAttribute('data-question-type');
+
             const answers = [];
             const answerElements = questionElement.querySelectorAll('input[name^="answer_"]');
             answerElements.forEach((answerElement) => {
@@ -171,12 +174,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const difficultyLevelSelect = questionElement.querySelector('select');
             const difficultyLevel = difficultyLevelSelect.value;
             const questionData = {
+                questionID:  questionIndex,
                 questionText: questionText,
+                questionType: questionType,
                 answers: answers,
                 correctAnswers: correctAnswers,
                 difficultyLevel: difficultyLevel
             };
             questions.push(questionData);
+            ++questionIndex;
         });
 
         const testData = {
